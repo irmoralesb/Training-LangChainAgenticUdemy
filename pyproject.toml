@@ -1,0 +1,15 @@
+[project]
+name = "training-langchainagenticudemy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "black>=26.3.1",
+    "isort>=8.0.1",
+    "langchain>=1.2.13",
+    "langchain-anthropic>=1.4.0",
+    "langchain-ollama>=1.0.1",
+    "langchain-openai>=1.1.12",
+    "python-dotenv>=1.2.2",
+]
