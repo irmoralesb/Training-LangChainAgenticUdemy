@@ -1,17 +1,17 @@
-from dataclasses import field
 import os
-from typing import List
-from pydantic import BaseModel, Field
+from dataclasses import field
 from pathlib import Path
+from typing import List
+
 from dotenv import load_dotenv
 from langchain.agents import create_agent
-from langchain_core.messages import HumanMessage
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
+from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import HumanMessage
 from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
-
+from pydantic import BaseModel, Field
 
 ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env")
@@ -19,14 +19,17 @@ load_dotenv(ROOT / ".env")
 
 class Source(BaseModel):
     """Schema for a source used by the agent"""
+
     url: str = Field(description="The URL of the source")
 
 
 class AgentResponse(BaseModel):
     """Schema for agen response with answer and sources"""
+
     answer: str = Field(description="The agent's answer to the query")
     sources: List[Source] = Field(
-        default_factory=list,  description="List of sources used to generate the answer")
+        default_factory=list, description="List of sources used to generate the answer"
+    )
 
 
 def get_chat_llm(provider_name: str, **kwargs) -> BaseChatModel:
@@ -54,9 +57,7 @@ def main():
     # query = "What is the weather in Tokyo?"
     query = "search for 3 job posting for an ai engineer using langchain in the bay area on linkedin and list their details"
 
-    result = agent.invoke({
-        "messages": HumanMessage(content=query)
-    })
+    result = agent.invoke({"messages": HumanMessage(content=query)})
     print(result)
 
 
