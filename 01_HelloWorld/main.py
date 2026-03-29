@@ -17,8 +17,8 @@ def get_chat_llm(provider_name: str, **kwargs) -> BaseChatModel:
     factories = {
         "openai": lambda : ChatOpenAI (model="gpt-4o-mini", **kwargs),
         "anthropic": lambda : ChatAnthropic(model="claude-haiku-4-5", **kwargs),
-        "ollama": lambda : ChatOllama (model="gemma3:270m", **kwargs),
-        #"ollama": lambda : ChatOllama (model="gpt-oss:20b", **kwargs),
+        #"ollama": lambda : ChatOllama (model="gemma3:270m", **kwargs),
+        "ollama": lambda : ChatOllama (model="gpt-oss:20b", **kwargs),
         #"ollama": lambda : ChatOllama (model="qwen3:1.7b", **kwargs),
     }
 
@@ -34,9 +34,10 @@ def main(provider_name:str):
     print("Hello LangChain")
     info_path = Path(__file__).resolve().parent / "information.txt"
     information = info_path.read_text(encoding='utf-8')
+    person = "Elon Musk"
 
     summary_template = f"""
-    Given the information {information} about a person I want you to create:
+    Given the information {information} about {person} I want you to create:
     1. A short summary
     2. Two interesting facts about them
     """
@@ -50,9 +51,9 @@ def main(provider_name:str):
 
     # LangChain Expression Syntax!!!
     chain = summary_prompt_template | llm
-    response = chain.invoke(input={"information": information})
+    response = chain.invoke(input={"information": information, "person":person})
     print(response.content)
 
 if __name__ == "__main__":
-    main("openai")
+    main("ollama")
     #print(os.environ.get("OPENAI_API_KEY"))
