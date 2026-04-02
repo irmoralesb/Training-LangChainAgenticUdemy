@@ -8,6 +8,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_anthropic import ChatAnthropic
 from langchain_pinecone import PineconeVectorStore
 
 
@@ -16,14 +17,15 @@ ROOT = CURRENT_DIRECTORY.parent
 load_dotenv(ROOT / ".env")
 
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+#LLM_API_KEY = os.environ.get("OPENAI_API_KEY")
+LLM_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 INDEX_NAME = os.environ.get("INDEX_NAME")
 
 
 print("Initializing components...")
 
 embeddings = OpenAIEmbeddings()
-llm = ChatOpenAI()
+llm = ChatAnthropic(model_name="claude-haiku-4-5" ,api_key=LLM_API_KEY) #ChatOpenAI()
 
 vectorstore = PineconeVectorStore(
     index_name=INDEX_NAME, embedding=embeddings
@@ -110,7 +112,7 @@ if __name__ == "__main__":
     print("Retrieving...")
 
     # Query
-    query = "what is Pipecone in machine learning?"
+    query = "what is Pinecone in machine learning?"
 
     # ========================================================================
     # Option 0: Raw invocation without RAG
