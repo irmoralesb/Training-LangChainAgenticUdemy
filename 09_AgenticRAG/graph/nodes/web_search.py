@@ -20,9 +20,20 @@ def web_search(state: GraphState) -> Dict[str, Any]:
     documents = state["documents"]
 
     tavily_results = web_search_tool.invoke({"query": question})
-    joined_tavily_result = "\n".join(
-        [tavily_result["content"] for tavily_result in tavily_results]
-    )
+
+    # Tavily response format can vary by version:
+    # - list[dict] with "content"
+    # - dict with "results": list[dict]
+    # - string
+    results_list = tavily_results.get("results", []) if isinstance(tavily_results, dict) else tavily_results
+    if isinstance(results_list, list):
+        joined_tavily_result = "\n".join(
+            result.get("content", str(result)) if isinstance(result, dict) else str(result)
+            for result in results_list
+        )
+    else:
+        joined_tavily_result = str(results_list)
+
     web_results = Document(page_content=joined_tavily_result)
     if documents is not None:
         documents.append(web_results)
